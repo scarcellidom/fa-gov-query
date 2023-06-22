@@ -14,8 +14,8 @@ warnings.filterwarnings("ignore")
 user = os.path.expanduser('~').replace(os.sep, '/')
 USAID = fr"{user}/OneDrive - Guidehouse/FAID/data"
 STATE = fr"{user}/OneDrive - Guidehouse/FADR Processing"
-feather = fr"{user}/OneDrive - Guidehouse/FAID/scripts/dashboard/caches"
-# feather = "caches"
+# feather = fr"{user}/OneDrive - Guidehouse/FAID/scripts/dashboard/caches"
+feather = "caches"
 
 default_color = "#18BC9C"
 
