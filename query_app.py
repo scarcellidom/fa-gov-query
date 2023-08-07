@@ -5,16 +5,11 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import warnings
 import data_tracking as dat
-import dqi_tracking as dqi
 import query_tracking as qtk
-# import auth as auth
-# from flask_caching import Cache
-# import gunicorn
 
 pd.options.mode.chained_assignment = None
 warnings.filterwarnings("ignore")
 
-# PASSWORDS = auth.VALID_USERNAME_PASSWORD_PAIRS
 feather = dat.feather
 
 SIDEBAR_STYLE = {
@@ -37,34 +32,11 @@ CONTENT_STYLE = {
     # "padding": "2rem 1rem",
 }
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY, 'https://codepen.io/chriddyp/pen/bWLwgP.css'], suppress_callback_exceptions=True)
-# auth = dash_auth.BasicAuth(
-#     app,
-#     PASSWORDS
-# )
-# cache = Cache(app.server, config={
-#     'CACHE_TYPE': 'filesystem',
-#     'CACHE_DIR': 'cache-directory'
-# })
-
-# TIMEOUT = 200
+app = Dash(__name__, external_stylesheets=[dbc.themes.COSMO, 'https://codepen.io/chriddyp/pen/bWLwgP.css'], suppress_callback_exceptions=True)
 
 app.layout = html.Div(className='row', children=[
-    # html.H1('F-Data Tracking', style={'textAlign': 'center',}),
     dcc.Location(id='url'),
     dbc.NavbarSimple(children=[
-        #     dbc.DropdownMenu(
-        #     children=[
-        #         # dbc.DropdownMenuItem(" Data Source Comparison ", header=True),
-        #         dbc.DropdownMenuItem("Published Data (FA.gov)", href="/faid",external_link=True, active="exact"),
-        #         dbc.DropdownMenuItem(" Internal Data (CGFS Extracts) ", href="/fadr",external_link=True, active="exact"),
-        #         dbc.DropdownMenuItem(" Combined (Beta) ", href="/combined",external_link=True, active="exact"),
-        #     ],
-        #     nav=True,
-        #     in_navbar=True,
-        #     label="Data Source Comparison",
-        # ),
-        #     dbc.NavItem(dbc.NavLink("Data Quality Improvements", href="/dqi",external_link=True, active="exact")),
             dbc.NavItem(dbc.NavLink("QUERY Tool (Beta)", href="/query",external_link=True, active="exact")),
             
         ],
@@ -81,14 +53,13 @@ app.layout = html.Div(className='row', children=[
             id="loading-1",
             type="default",
             children=html.Div(id='tabs-content-graphs', style={"margin-bottom": "35px",'display': 'inline-block'}), style={"margin-bottom": "35px",'display': 'inline-block', 'width':'99%'}),
-    html.Div(children=[html.P('''\n\n\nPublished FA.gov data is current as of the website on 5 May 2023.''')], style={"margin-top": "25px"})
+    html.Div(children=[html.P('''\n\n\nPublished FA.gov data is current as of the website on 11 July 2023.''')], style={"margin-top": "25px"})
 ], style=CONTENT_STYLE)#style={"border":"10px white solid",'display': 'inline-block'})
 
 server = app.server
                                                                                           
 @app.callback(Output('tabs-content-dropdowns','children'),
               Input('url','pathname'))
-              # Input('tabs-faid-fadr-tracking','value'))
 
 def render_tabs(tab):
     if tab == '/':
@@ -111,172 +82,24 @@ def render_tabs(tab):
                 ])
             ],style=SIDEBAR_STYLE),
             html.Div(children=[
-                html.H5('Welcome to the F-Data Tracker'),
+                html.H5('Welcome to the FA.gov Query Tool'),
                 html.Div(children=[
-                        html.P('''The purpose of this app is to provide members of the F-Data team the ability to visualize, understand,
-                                  and ask questions of quarterly Department of State foreign assistance data.'''),
+                        html.P('''The purpose of this app is to provide individuals at the State Department the ability to query
+                                  and ask questions of FA.gov financial foreign assistance data.'''),
                         html.P('''\n\nThe Query tab allows users to query published data in order to respond to internal or
-                                  external data calls. Data is filterable by agency, bureau, year, sector, and location. Multiple values are selectable 
+                                  external data calls. Data is filterable by agency, bureau, year, sector, funding account, and location. Multiple values are selectable 
                                   for each field.'''),
                         html.P('''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
                                   visualization tools, visit https://foreignassistance.gov/''')
                     ], style={'margin-top':'25px','font-size':'14px'}),
-
+                # dcc.Link(html.Button("QUERY BUILDER"), href="/query", refresh=True, style={'margin-top': '10px',
+                #                                                                            'margin-bottom': '10px',
+                #                                                                            'textAlign':'center',
+                #                                                                            'margin':'auto'})
                 # html.P('''\n[LARGE IMAGE WILL GO HERE]'''),
             ])
         ])
-    # elif tab == '/faid':
-        
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FAID_full_1"),pd.read_feather(fr"{feather}/FAID_full_2")]).reset_index(drop=True)
-    #     df = df.loc[df['Managing Agency']=='Department of State']
-
-    #     df_burs = ['All'] + sorted(df['bureau'].astype(str).unique().tolist())
-    #     df_yrs = ['All'] + sorted(df['Fiscal Year'].astype(str).unique().tolist())
-
-    #     return html.Div(children=[
-    #         html.Div(children=[
-    #             html.H3('Filters:', style={"margin-top":"25px"}),
-    #             dbc.Card(
-    #                 [
-    #                     dbc.CardBody(
-    #                         [
-    #                             html.H5('Bureau:'),
-    #                             dcc.Dropdown(df_burs, 'All', id={'name':'bureau_dash',
-    #                                                               'type':'filter-dropdown',
-    #                                                               'index':0}),
-    #                             html.H5('Spending Type:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(['Obligations','Disbursements'], 'Obligations', id={'name':'spnd_type_dash',
-    #                                                                                                'type':'filter-dropdown',
-    #                                                                                                'index':1}),
-    #                             html.H5('Year:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(df_yrs, 'All', id={'name':'year_dash',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':2}),
-    #                             html.H5('Year Calculation:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(['Transaction Fiscal Year',
-    #                                           'Award Start Year'], 'Transaction Fiscal Year', id={'name':'year_type_dash',
-    #                                                                                               'type':'filter-dropdown',
-    #                                                                                               'index':3}),
-    #                             dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={"margin-top": "5px"}),
-    #                         ]
-    #                     ),
-    #                 ],
-    #                 style={"margin-top":"5px"},
-    #             ),
-    #             ], style=SIDEBAR_STYLE
-    #         ),
-    #         html.Div(children=[
-    #             html.H4('Data Comparison Introduction:', style={"margin-top":"25px"}
-    #                     ),
-    #             html.P('''The purpose of the data comparison dropdown is to provide members of the F-Data team the ability to visualize, understand,
-    #                       and ask questions of quarterly Department of State foreign assistance data.'''),
-    #             html.P('''\n\nThe first two options of this dropdown show spending patterns at the bureau, year, and location level
-    #                       for both published and unpuplished data. Users can select either all obligated data or all disbursement data to see both what
-    #                       has been committed and what has already been spent. Users can also group spending for internal data by the year
-    #                       in which the transaction occurred or the year when the award was first obligated.'''),
-    #             html.P('''\n\nThe third dropdown option, "Combined (Beta), allows users to create simple bar charts to directly compare between published and 
-    #                       internal data. This functionality is still in development, so please report any found bugs.'''),
-    #             html.P('''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
-    #                       visualization tools, visit https://foreignassistance.gov/''')]
-    #                     ,) #style={'width': '64%', 'display':'inline-block', "margin-left": "15px"})
-    #     ])
-    # elif tab == '/fadr':
-        
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-
-    #     df_burs = ['All'] + sorted(df['bureau'].astype(str).unique().tolist())
-    #     df_yrs = ['All'] + sorted(df['year'].astype(str).unique().tolist())
-
-    #     return html.Div(children=[
-    #         html.Div(children=[
-    #             html.H3('Filters:', style={"margin-top":"25px"}),
-    #             dbc.Card(
-    #                 [
-    #                     dbc.CardBody(
-    #                         [
-    #                             html.H5('Bureau:'),
-    #                             dcc.Dropdown(df_burs, 'All', id={'name':'bureau_dash',
-    #                                                               'type':'filter-dropdown',
-    #                                                               'index':0}),
-    #                             html.H5('Spending Type:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(['Obligations','Disbursements'], 'Obligations', id={'name':'spnd_type_dash',
-    #                                                                                                'type':'filter-dropdown',
-    #                                                                                                'index':1}),
-    #                             html.H5('Year:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(df_yrs, 'All', id={'name':'year_dash',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':2}),
-    #                             html.H5('Year Calculation:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(['Transaction Fiscal Year',
-    #                                           'Award Start Year'], 'Transaction Fiscal Year', id={'name':'year_type_dash',
-    #                                                                                               'type':'filter-dropdown',
-    #                                                                                               'index':3}),
-    #                             dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={"margin-top": "5px"}),
-    #                         ]
-    #                     ),
-    #                 ],
-    #                 style={"margin-top":"5px"},
-    #             ),
-    #             ], style=SIDEBAR_STYLE
-    #         ),
-    #         html.Div(children=[
-    #             html.H4('Data Comparison Introduction:', style={"margin-top":"25px"}
-    #                     ),
-    #             html.P('''The purpose of the data comparison dropdown is to provide members of the F-Data team the ability to visualize, understand,
-    #                       and ask questions of quarterly Department of State foreign assistance data.'''),
-    #             html.P('''\n\nThe first two options of this dropdown show spending patterns at the bureau, year, and location level
-    #                       for both published and unpuplished data. Users can select either all obligated data or all disbursement data to see both what
-    #                       has been committed and what has already been spent. Users can also group spending for internal data by the year
-    #                       in which the transaction occurred or the year when the award was first obligated.'''),
-    #             html.P('''\n\nhe third dropdown option, "Combined (Beta), allows users to create simple bar charts to directly compare between published and 
-    #                       internal data. This functionality is still in development, so please report any found bugs.'''),
-    #             html.P('''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
-    #                       visualization tools, visit https://foreignassistance.gov/''')]
-    #                     ,) #style={'width': '64%', 'display':'inline-block', "margin-left": "15px"})
-    #     ])
-    # elif tab == '/dqi':
-        
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-
-    #     df_burs = sorted(df['bureau'].astype(str).unique().tolist())
-    #     df_yrs = sorted(df['year'].astype(str).unique().tolist())
-    #     return html.Div(children=[
-    #         html.Div(children=[
-    #             html.H3('Filters:', style={"margin-top":"25px"}),
-    #             dbc.Card(
-    #                 [
-    #                     dbc.CardBody(
-    #                         [
-    #                             html.H5('Bureau:'),
-    #                             dcc.Dropdown(df_burs, 'AF', id={'name':'bureau_dqi',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':0}),
-    #                             html.H5('Year:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(df_yrs, 'All', id={'name':'year_dqi',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':2}),
-    #                             dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={"margin-top": "5px"}),
-    #                         ]
-    #                     ),
-    #                 ],
-    #                 #style={'width': '33%','display': 'inline-block'},
-    #             ), 
-    #         ], style=SIDEBAR_STYLE
-    #         ),
-    #         html.Div(children=[
-    #             html.H4('DQI Introduction:', style={"margin-top":"25px"}
-    #                     ),
-    #             html.P('''The purpose of this dashboard is to provide members of the F-Data team the ability to visualize, understand,
-    #                       and ask questions of quarterly Department of State foreign assistance data.'''),
-    #             html.P('''\n\nData Quality Improvement measures on this tab are designed to inform bureau outreach and measure 
-    #                       progress in aligning foreign assistance data entry with US goals of accuracy and transparency.'''),
-    #             html.P('''\n\nF-Data redactions refer to those redactions made by the F-Data team to mask sensitive info and PII in foreign 
-    #                       assistance data. DATA Act redactions refer to those transactions marked sensitive by those responsible for entering 
-    #                       foreign assistance transactions into the system of record. Below Length Requirement refers to those transactions 
-    #                       where Award Description falls below the recommended length requirement set by IATI.''')]
-    #                     ,#style={'width': '64%', 'display':'inline-block', "margin-left": "15px"}
-    #                     )
-    #     ])
+    
     elif tab == '/query':
         all_options = {
             'Internal (FADR)': ['bureau','year','Location','US Sector','Funding Account'],
@@ -322,98 +145,35 @@ def render_tabs(tab):
             html.Div(children=[
                 html.H4('Query Tool Introduction:', style={"margin-top":"25px"}
                         ),
-                html.P('''The purpose of this dashboard is to provide members of the F-Data team the ability to visualize, understand,
-                          and ask questions of quarterly US Government foreign assistance data. Upon clicking the "Submit" button,
+                html.P('''The purpose of this tool is to provide individuals at the State Department the ability to query
+                          and ask questions of FA.gov financial foreign assistance data.'''),
+                html.P('''\n\nThis tool allows users to query published data in order to respond to internal or
+                          external data calls. Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
+                          Multiple values are selectable for each field. Leaving a filter blank is allowed and will not result in data being excluded. Upon clicking the "Submit" button,
                           a table will populate below with your selections. That table is also available to download as a CSV file
                           for further analysis/visualization needs.'''),
-                html.P('''\n\nThis tool allows users to query published and internal data in order to respond to internal or
-                          external data calls. Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
-                          Multiple values are selectable for each field.'''),
-                html.P('''\n\nDirect comparisons between published and internal data require running two queries - one on each data source - 
-                          and downloading both results. Direct comparisons are available only for Department of State data.''')]
+                html.P('''\n\nAfter clicking the submit button, the filters will update based on your existing criteria. For example,
+                          selecting "Department of State" from the Managing Agency filter will update the Bureau filter to only show State
+                          bureaus. This allows for preliminary data exploration and helps the user more easily select relevant fields. Users are
+                          also able to choose "SELECT ALL" if they want all options included in the table but do not want to select them all individually.''')]
                         ,#style={'width': '64%', 'display':'inline-block', "margin-left": "15px"}
                         )
         ])
-    # elif tab == '/combined':
-
-    #     return html.Div(children=[
-    #         html.Div(children=[
-    #             html.H3('Filters:', style={"margin-top":"25px"}),
-    #             dbc.Card(
-    #                 [
-    #                     dbc.CardBody(
-    #                         [
-    #                             html.H5('Bureau:'),
-    #                             dcc.Dropdown(options=[],value='All', id={'name':'bureau',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':0}),
-    #                             html.H5('Fiscal Year:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(options=[],value='All', id={'name':'years',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':1}),
-    #                             html.H5('Recipient Location:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(options=[],value='All', id={'name':'locations',
-    #                                                              'type':'filter-dropdown',
-    #                                                              'index':2}),
-    #                             html.H5('SPSD Category:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(options=[],value='All',optionHeight=50, id={'name':'cats',
-    #                                                                                       'type':'filter-dropdown',
-    #                                                                                       'index':3}),
-    #                             html.H5('SPSD Sector:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(options=[],value='All',optionHeight=50, id={'name':'spsds',
-    #                                                                                       'type':'filter-dropdown',
-    #                                                                                       'index':4}),
-    #                             html.H5('Funding Account:', style={"margin-top": "5px"}),
-    #                             dcc.Dropdown(options=[],value='All',optionHeight=75, id={'name':'accts',
-    #                                                                                       'type':'filter-dropdown',
-    #                                                                                       'index':5},
-    #                                          style={'font-size':'1.2rem'}),
-    #                             dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={"margin-top": "5px"}),
-    #                         ]
-    #                     ),
-    #                 ],
-    #                 #style={'width': '33%','display': 'inline-block'},
-    #             ), 
-    #         ], style=SIDEBAR_STYLE
-    #         ),
-    #         html.Div(children=[
-    #             html.H4('Data Comparison Introduction:', style={"margin-top":"25px"}
-    #                     ),
-    #             html.P('''The purpose of the data comparison dropdown is to provide members of the F-Data team the ability to visualize, understand,
-    #                       and ask questions of quarterly Department of State foreign assistance data.'''),
-    #             html.P('''\n\nThe first two options of this dropdown show spending patterns at the bureau, year, and location level
-    #                       for both published and unpuplished data. Users can select either all obligated data or all disbursement data to see both what
-    #                       has been committed and what has already been spent. Users can also group spending for internal data by the year
-    #                       in which the transaction occurred or the year when the award was first obligated.'''),
-    #             html.P('''\n\nThe Third dropdown option, "Combined (Beta), allows users to create simple bar charts to directly compare between published and 
-    #                       internal data. This functionality is still in development, so please report any found bugs.'''),
-    #             html.P('''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
-    #                       visualization tools, visit https://foreignassistance.gov/''')]
-    #                     ,#style={'width': '64%', 'display':'inline-block', "margin-left": "15px"}
-    #                     )
-    #     ])
-
+    
 @app.callback(Output('dropdown-container','children'),
               Input('url', 'pathname'),
-              # Input('tabs-faid-fadr-tracking', 'value'),
               Input('dropdown-container','children'),
               Input('submit-button-state','n_clicks'),
-              # Input({'name':'sources-radio','type':'filter-dropdown','index':0},'value'),
               Input({'name':'sources-radio','type':'filter-dropdown','index':1},'value'))
 def display_dropdowns(tab, children, clicks, val2):
     regions = pd.read_csv(fr'{feather}/country_region_xwalk.csv')
     region_dict = dict(zip(regions.Country, regions.Region))
 
-    # if val == 'FA.gov (FAID)':
     df = pd.concat([pd.read_feather(fr"{feather}/FAID_full_1"),pd.read_feather(fr"{feather}/FAID_full_2")]).reset_index(drop=True)
     df['Region'] = df['Country Name'].map(lambda x: region_dict.get(x,x))
     df.loc[df['Country Name'].isin(['PSE','INFORMATION REDACTED','nan']), 'Region'] = 'World'
     allocs = 'Transaction Type Name'
-    # elif val == 'Internal (FADR)':
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-    #     df['Region'] = df['Location'].map(lambda x: region_dict.get(x,x))
-    #     df.loc[df['Location'].isin(['PSE','INFORMATION REDACTED','nan']), 'Region'] = 'World'
-    #     allocs = 'Award_Transaction_Type'
+
     if val2 == 'Obligations':
         df = df.loc[df[allocs].isin(['Obligations','Commitment'])]
     else:
@@ -433,7 +193,10 @@ def display_dropdowns(tab, children, clicks, val2):
     
     for i,v in enumerate(all_options[val]):
         try:
-            df = df.loc[df[v].isin(children[i]['props']['children'][1]['props']['value'])]
+            if children[i]['props']['children'][1]['props']['value'] != ['SELECT ALL']:
+                df = df.loc[df[v].isin(children[i]['props']['children'][1]['props']['value'])]
+            else:
+                selecteds[v] = None
             selecteds[v] = children[i]['props']['children'][1]['props']['value']
         except Exception:
             selecteds[v] = None
@@ -477,150 +240,20 @@ def display_dropdowns(tab, children, clicks, val2):
         children.append(new_dropdown)
 
     return children
-
-# @app.callback([Output({'name':'bureau','type':'filter-dropdown','index':0},'options'),
-#                Output({'name':'years','type':'filter-dropdown','index':1},'options'),
-#               Output({'name':'locations','type':'filter-dropdown','index':2},'options'),
-#               Output({'name':'cats','type':'filter-dropdown','index':3},'options'),
-#               Output({'name':'spsds','type':'filter-dropdown','index':4},'options'),
-#               Output({'name':'accts','type':'filter-dropdown','index':5},'options')],
-#               [Input('url', 'pathname'),
-#               Input({'name':ALL,'type':'filter-dropdown','index':ALL},'value'),])
-# def live_dropdowns(tab, val):
-    
-#     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-    
-#     if val[0] not in [None, 'All']:
-#         df = df.loc[(df['bureau']==val[0])]
-#     if val[1] not in [None, 'All']:
-#         df = df.loc[(df['year']==val[1])]
-#     if val[2] not in [None, 'All']:
-#         df = df.loc[(df['Location']==val[2])]
-#     if val[3] not in [None, 'All']:
-#         df = df.loc[(df['SPSD Category']==val[3])]
-#     if val[4] not in [None, 'All']:
-#         df = df.loc[(df['US Sector']==val[4])]
-#     if val[5] not in [None, 'All']:
-#         df = df.loc[(df['Funding Account']==val[5])]
-
-        
-#     df_burs = ['All'] + sorted(df['bureau'].astype(str).unique().tolist())
-#     df_yrs = ['All'] + sorted(df['year'].astype(str).unique().tolist())
-#     df_locs = ['All'] + sorted(df['Location'].astype(str).unique().tolist())
-#     df_cats = ['All'] + sorted(df['SPSD Category'].astype(str).unique().tolist())
-#     df_spsds = ['All'] + sorted(df['US Sector'].astype(str).unique().tolist())
-#     df_accts = ['All'] + sorted(df['Funding Account'].astype(str).unique().tolist())
-    
-#     return df_burs,df_yrs,df_locs,df_cats,df_spsds,df_accts
-        
                                                                                               
 @app.callback(Output('tabs-content-graphs', 'children'),
               Input('url', 'pathname'),
-              # Input('tabs-faid-fadr-tracking', 'value'),
               Input('submit-button-state', 'n_clicks'),
               State({'name':ALL,'type':'filter-dropdown','index':ALL},'value'))
-# @cache.memoize(timeout=TIMEOUT)
 def render_content(tab, button, vals): #bur, yr, alls, yrtp
-    # if tab == '/faid':
-        
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FAID_full_1"),pd.read_feather(fr"{feather}/FAID_full_2")]).reset_index(drop=True)
-    #     df = df.loc[df['Managing Agency']=='Department of State']
-
-    #     return html.Div(children=[
-    #         html.H3('Amount Spent by Bureau and Year (Current US Dollars)'),
-    #         html.Div(children=[
-    #             dcc.Graph(
-    #                 figure=dat.bureau_spending(df, 'FAID', vals[0], vals[2], vals[1], vals[3]), #style={'width': '59%','display': 'inline-block'}
-    #             ),
-    #             dcc.Graph(
-    #                 figure=dat.yearly_spending(df, 'FAID', vals[0], vals[2], vals[1], vals[3]), #style={'width': '39%','display': 'inline-block'}
-    #             ),
-    #         ]),
-    #         html.Div(children=[
-    #             html.H3('Amount Spent by Country and Region (Current US Dollars)'),
-    #             dcc.Graph(
-    #                 figure=dat.create_map(df, 'FAID', vals[0], vals[2], vals[1], vals[3]), #style={'width': '66%','display': 'inline-block'}
-    #             ),
-    #             html.P('Note: Map data includes only spending which data is available at the country label. The bar chart includes all data aggregated at the regional and global level.'),
-    #             dcc.Graph(
-    #                 figure=dat.create_map(df, 'FAID', vals[0], vals[2], vals[1], vals[3], mapping=False), #style={'width': '32%','display': 'inline-block'}
-    #             )
-    #         ]),
-    #         html.Div(children=[
-    #             html.H3('Amount Spent by SPSD Category (Current US Dollars)'),
-    #             dcc.Graph(
-    #                 figure=dat.SPSD_spending(df, 'FAID', vals[0], vals[2], vals[1], vals[3]), #style={'width': '66%','display': 'inline-block'}
-    #             ),
-    #         ])
-    #     ],)
-    # elif tab == '/fadr':
-        
-    #     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-
-    #     return html.Div(className='row', children=[
-    #         html.H3('Amount Spent by Bureau and Year (Current US Dollars)'),
-    #         html.Div(children=[
-    #             dcc.Graph(
-    #                 figure=dat.bureau_spending(df, 'FADR', vals[0], vals[2], vals[1], vals[3]), #style={'width': '59%','display': 'inline-block'}
-    #             ),
-    #             dcc.Graph(
-    #                 figure=dat.yearly_spending(df, 'FADR', vals[0], vals[2], vals[1], vals[3]), #style={'width': '39%','display': 'inline-block'}
-    #             ),
-    #         ]),
-    #         html.Div(children=[
-    #             html.H3('Amount Spent by Country and Region (Current US Dollars)'),
-    #             dcc.Graph(
-    #                 figure=dat.create_map(df, 'FADR', vals[0], vals[2], vals[1], vals[3]), #style={'width': '66%','display': 'inline-block'}
-    #             ),
-    #             html.P('Note: Map data includes only spending which data is available at the country label. The bar chart includes all data aggregated at the regional and global level.'),
-    #             dcc.Graph(
-    #                 figure=dat.create_map(df, 'FADR', vals[0], vals[2], vals[1], vals[3], mapping=False), #style={'width': '32%','display': 'inline-block'}
-    #             )
-    #         ]),
-    #         html.Div(children=[
-    #             html.H3('Amount Spent by SPSD Category (Current US Dollars)'),
-    #             dcc.Graph(
-    #                 figure=dat.SPSD_spending(df, 'FADR', vals[0], vals[2], vals[1], vals[3]), #style={'width': '66%','display': 'inline-block'}
-    #             ),
-    #         ])
-    #     ])
-    # elif tab == '/dqi':
-    #     return html.Div(className='row', children=[
-    #         html.H3('Bureau DQI Progress Dashboard'),
-    #         html.Div(children=[
-    #             dcc.Graph(
-    #                 figure=dqi.find_bureau(vals[0]), #style={'width': '99%','display': 'inline-block'}
-    #             ),
-    #             html.P('Note: Percentage values for F-Data are calculated as (# Redactions / # Transactions). Multiple fields needing redaction in a single transaction can result in values greater than 100%.'),
-    #             # dbc.Table.from_dataframe(dqi.common_pii(vals[0],vals[1]), style={'width': '32%','display': 'inline-block'}
-    #             # )
-    #         ]),
-    #         html.Div(children=[
-    #             dcc.Graph(
-    #                 figure=dqi.redaction_type(vals[0],vals[1],condensed=False), style={"margin-top": "15px"}#style={'width': '30%','display': 'inline-block'}
-    #             ),
-    #             dcc.Graph(
-    #                 figure=dqi.redaction_type(vals[0],vals[1]), #style={'width': '31%','display': 'inline-block'}
-    #             ),
-    #             dcc.Graph(
-    #                 figure=dqi.redaction_column(vals[0],vals[1]), #style={'width': '39%','display': 'inline-block'}
-    #             ),
-    #         ]),
-    #     ])
     if tab == '/query':
         regions = pd.read_csv(fr'{feather}/country_region_xwalk.csv')
         region_dict = dict(zip(regions.Country, regions.Region))
-        # if vals[0] == 'FA.gov (FAID)':
         df = pd.concat([pd.read_feather(fr"{feather}/FAID_full_1"),pd.read_feather(fr"{feather}/FAID_full_2")]).reset_index(drop=True)
         df['Region'] = df['Country Name'].map(lambda x: region_dict.get(x,x))
         df.loc[df['Country Name'].isin(['PSE','INFORMATION REDACTED','nan']), 'Region'] = 'World'
         allocs = 'Transaction Type Name'
-        # elif vals[0] == 'Internal (FADR)':
-        #     df = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-        #     df['Region'] = df['Location'].map(lambda x: region_dict.get(x,x))
-        #     df.loc[df['Location'].isin(['PSE','INFORMATION REDACTED','nan']), 'Region'] = 'World'
-        #     allocs = 'Award_Transaction_Type'
-        
+      
         if vals[0] == 'Obligations':
             df = df.loc[df[allocs].isin(['Obligations','Commitment'])]
         else:
@@ -639,21 +272,6 @@ def render_content(tab, button, vals): #bur, yr, alls, yrtp
         return html.Div(className='row', children=[
             html.H3('FAID & FADR Query Tool')
         ]),
-    # elif tab == '/combined':
-        
-    #     faid = pd.concat([pd.read_feather(fr"{feather}/FAID_full_1"),pd.read_feather(fr"{feather}/FAID_full_2")]).reset_index(drop=True)
-    #     faid = faid.loc[faid['Managing Agency']=='Department of State']
-    #     fadr = pd.concat([pd.read_feather(fr"{feather}/FADR_full_1"),pd.read_feather(fr"{feather}/FADR_full_2")]).reset_index(drop=True)
-
-    #     if any(i!='All' for i in vals):
-
-    #         return html.Div(className='row', children=[
-    #                 html.H3('Data Source Comparison:'),
-    #                 dcc.Graph(figure=qtk.create_chart(fadr,faid,[vals[0]],[vals[1]],[vals[2]],[vals[3]],[vals[4]],[vals[5]]))
-    #             ])
-    #     return html.Div(className='row', children=[
-    #         html.H3('Data Source Comparison:')
-    #     ])
-
+    
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)

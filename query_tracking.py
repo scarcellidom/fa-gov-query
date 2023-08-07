@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 def create_list(df, col):
     '''create dropdown list for the given column in the given dataframe'''
     
-    return sorted(df[col].unique().tolist())
+    return ['SELECT ALL'] + sorted(df[col].unique().tolist())
 
 def subset_data(df, src, agen, burs, yrs, locs, cats, spsds, accts, reg=None, chart=False):
     '''subset dataset and calculate spending'''
@@ -35,29 +35,37 @@ def subset_data(df, src, agen, burs, yrs, locs, cats, spsds, accts, reg=None, ch
     # subset data based on dropdowns
     grp_cols = []
     if agen != ['All'] and agen != None:
-        df = df.loc[df['Managing Agency'].isin(agen)]
+        if 'SELECT ALL' not in agen:
+            df = df.loc[df['Managing Agency'].isin(agen)]
         grp_cols.append('Managing Agency')
     if burs != ['All'] and burs != None:
-        df = df.loc[df['Bureau'].isin(burs)]
+        if 'SELECT ALL' not in burs:
+            df = df.loc[df['Bureau'].isin(burs)]
         grp_cols.append('Bureau')
     if yrs != ['All'] and yrs != None:
-        df = df.loc[df['Fiscal Year'].astype(str).isin(yrs)]
+        if 'SELECT ALL' not in yrs:
+            df = df.loc[df['Fiscal Year'].astype(str).isin(yrs)]
         # df['Fiscal Year'] = df['Fiscal Year'].astype(str)
         grp_cols.append('Fiscal Year')
     if reg  != ['All'] and reg  != None:
-        df = df.loc[df['Region'].isin(reg)]
-        # grp_cols.append('Region')
+        if 'SELECT ALL' not in reg:
+            df = df.loc[df['Region'].isin(reg)]
+        grp_cols.append('Region')
     if locs != ['All'] and locs != None:
-        df = df.loc[df['Country/Region'].isin(locs)]
+        if 'SELECT ALL' not in locs:
+            df = df.loc[df['Country/Region'].isin(locs)]
         grp_cols.append('Country/Region')
     if cats != ['All'] and cats != None:
-        df = df.loc[df['SPSD Category'].isin(cats)]
+        if 'SELECT ALL' not in cats:
+            df = df.loc[df['SPSD Category'].isin(cats)]
         grp_cols.append('SPSD Category')
     if spsds != ['All'] and spsds != None:
-        df = df.loc[df['SPSD Code'].isin(spsds)]
+        if 'SELECT ALL' not in spsds:
+            df = df.loc[df['SPSD Code'].isin(spsds)]
         grp_cols.append('SPSD Code')
     if accts != ['All'] and accts != None:
-        df = df.loc[df['Funding Account'].isin(accts)]
+        if 'SELECT ALL' not in accts:
+            df = df.loc[df['Funding Account'].isin(accts)]
         grp_cols.append('Funding Account')
         
     # groupby
