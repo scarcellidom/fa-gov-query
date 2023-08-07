@@ -61,8 +61,8 @@ def subset_data(df, src, agen, burs, yrs, locs, cats, spsds, accts, reg=None, ch
         grp_cols.append('SPSD Category')
     if spsds != ['All'] and spsds != None:
         if 'SELECT ALL' not in spsds:
-            df = df.loc[df['SPSD Code'].isin(spsds)]
-        grp_cols.append('SPSD Code')
+            df = df.loc[df['US Sector'].isin(spsds)]
+        grp_cols.append('US Sector')
     if accts != ['All'] and accts != None:
         if 'SELECT ALL' not in accts:
             df = df.loc[df['Funding Account'].isin(accts)]
