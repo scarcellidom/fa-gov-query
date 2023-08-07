@@ -40,7 +40,7 @@ app.layout = html.Div(className='row', children=[
             dbc.NavItem(dbc.NavLink("QUERY Tool (Beta)", href="/query",external_link=True, active="exact")),
             
         ],
-        brand='F-Data Tracking',
+        brand='F-Data',
         brand_href="/",
         color='primary',
         dark=True,
@@ -65,7 +65,7 @@ def render_tabs(tab):
     if tab == '/':
         return html.Div(children=[
             html.Div(children=[
-                        html.H3('F-Data Tracking:', style={'margin-top':'25px'}),
+                        html.H3('F-Data:', style={'margin-top':'25px'}),
                         html.Div(children=[
                             # html.Img(src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Seal_of_the_United_States_Department_of_State.svg/2048px-Seal_of_the_United_States_Department_of_State.svg.png',
                             #          style={'margin-top':'25px','height':'90%','width':'90%'}),
@@ -78,6 +78,9 @@ def render_tabs(tab):
                                 ),
                             html.Div(
                                 html.A("USAID FA.gov API Site", href="https://data.usaid.gov/Administration-and-Oversight/ForeignAssistance-gov-Complete/azij-hu6e")
+                            ),
+                            html.Div(
+                                html.A("F-Data Hub", href="https://usdos.sharepoint.com/sites/F/SitePages/F-Data.aspx?from=SendByEmail&xsdata=MDV8MDF8fDIxODgzYTU1YWY5MTRlMTgyODE1MDhkYjg4N2Q1Mzc3fDY2Y2Y1MDc0NWFmZTQ4ZDFhNjkxYTEyYjIxMjFmNDRifDB8MHw2MzgyNTM4NDQwNTU2NjQ2NjF8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazkwYUdWeUlpd2lWMVFpT2pFeGZRPT18MXxMMk5vWVhSekx6RTVPak5sWm1FeE1XTTRMVEZrTldRdE5HSTJOQzFoT0daakxUZ3hZV1l3TmpGa1lXRXpORjlsWWpGaU9HRTJOeTFoTnpCaUxUUXlNV1F0T0RFeVl5MW1NMkl6WW1JNE1EWTFNemRBZFc1eExtZGliQzV6Y0dGalpYTXZiV1Z6YzJGblpYTXZNVFk0T1RjNE56WXdORGM0Tmc9PXwwN2YyY2Y0NjQ5MzY0YzViMjgxNTA4ZGI4ODdkNTM3N3w0ODQ3ZmY4YTRmN2I0ZjZjODRhOGI2OTFlNjZhMzg1Nw%3d%3d&sdata=RFRSWVJTK2REeno4N0VGVE5RWTRVQmwrdUdYN2Q5SlBsZG9vRFE2ajhVMD0%3d&ovuser=66cf5074-5afe-48d1-a691-a12b2121f44b%2cMacdonaldCL%40state.gov&OR=Teams-HL&CT=1689795677959&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIxNDE1LzIzMDYwNDAxMTM4IiwiSGFzRmVkZXJhdGVkVXNlciI6ZmFsc2V9&SafelinksUrl=https%3a%2f%2fusdos.sharepoint.com%2fsites%2fF%2fSitePages%2fF-Data.aspx")
                             ),
                 ])
             ],style=SIDEBAR_STYLE),
