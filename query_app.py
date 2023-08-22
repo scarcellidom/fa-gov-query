@@ -266,7 +266,7 @@ def render_content(tab, button, vals): #bur, yr, alls, yrtp
         if any(isinstance(i, list) for i in vals):
             df = qtk.subset_data(df,'FA.gov (FAID)',vals[1],vals[2],vals[3],vals[5],vals[6],vals[7],vals[8],reg=vals[4])
             return html.Div(className='row', children=[
-                html.H3('FAID & FADR Query Tool'),
+                html.H3('FA.gov Query Tool'),
                 dash_table.DataTable(id='query_results',
                                      data=df.to_dict('records'),
                                      columns=[{"name": i, "id": i} for i in df.columns],
@@ -274,7 +274,7 @@ def render_content(tab, button, vals): #bur, yr, alls, yrtp
                                     )
             ])
         return html.Div(className='row', children=[
-            html.H3('FAID & FADR Query Tool')
+            html.H3('FA.gov Query Tool')
         ]),
     
 if __name__ == '__main__':
