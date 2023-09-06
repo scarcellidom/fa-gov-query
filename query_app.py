@@ -76,7 +76,7 @@ def render_tabs(tab):
     
                                 ], style={"margin-top":"35px",'text-align':'center', 'margin-botttom':'20px'}),
                             html.Div(
-                                    html.A("Query Tool Detailed Instructions", href="https://usdos.sharepoint.com/:w:/r/sites/F/F%20Data%20Resources/Data%20Governance/FAgov%20Query%20Tool%20Instruction%20Guide_2023.docx?d=waa5f62d5a25f4e0dbc5d6e8653a2d5c5&csf=1&web=1&e=W1bcGT", target="_blank"),
+                                    html.A("Query Tool Detailed Instructions", href="https://usdos.sharepoint.com.mcas.ms/sites/F/F%20Data%20Resources/Forms/AllItems.aspx?id=%2Fsites%2FF%2FF%20Data%20Resources%2FData%20Governance%2FFAgov%20Query%20Tool%20Instruction%20Guide%5F2023%5F%2Epdf&parent=%2Fsites%2FF%2FF%20Data%20Resources%2FData%20Governance", target="_blank"),
                                 style={"margin-top":"15px",'margin-bottom': '10px',}),
                             html.Div(
                                     html.A("ForeignAssistance.gov", href="https://foreignassistance.gov/", target="_blank"),
@@ -159,7 +159,7 @@ def render_tabs(tab):
                 html.P([
                        '''The purpose of this tool is to provide individuals at the State Department the ability to query
                           and ask questions of FA.gov financial foreign assistance data. ''',
-                       html.A("Detailed instructions are available here.", href="https://usdos.sharepoint.com/:w:/r/sites/F/F%20Data%20Resources/Data%20Governance/FAgov%20Query%20Tool%20Instruction%20Guide_2023.docx?d=waa5f62d5a25f4e0dbc5d6e8653a2d5c5&csf=1&web=1&e=W1bcGT", target="_blank")
+                       html.A("Detailed instructions are available here.", href="https://usdos.sharepoint.com.mcas.ms/sites/F/F%20Data%20Resources/Forms/AllItems.aspx?id=%2Fsites%2FF%2FF%20Data%20Resources%2FData%20Governance%2FFAgov%20Query%20Tool%20Instruction%20Guide%5F2023%5F%2Epdf&parent=%2Fsites%2FF%2FF%20Data%20Resources%2FData%20Governance", target="_blank")
                        ]),
                 html.P('''\n\nThis tool allows users to query published data in order to respond to internal or
                           external data calls. Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
