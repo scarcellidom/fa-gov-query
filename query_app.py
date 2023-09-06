@@ -41,11 +41,12 @@ app.layout = html.Div(className='row', children=[
             dbc.NavItem(dbc.NavLink("QUERY Tool (Beta)", href="/query",external_link=True, active="exact")),
             
         ],
-        brand='F-Data',
+        brand='Home',
         brand_href="/",
         color='primary',
         dark=True,
         fluid=True,
+        expand='xs',
         sticky='top',
         ),
     html.Div(id='tabs-content-dropdowns', style={"margin-bottom": "35px",'display': 'inline-block'}),
@@ -54,7 +55,7 @@ app.layout = html.Div(className='row', children=[
             id="loading-1",
             type="default",
             children=html.Div(id='tabs-content-graphs', style={"margin-bottom": "35px",'display': 'inline-block'}), style={"margin-bottom": "35px",'display': 'inline-block', 'width':'99%'}),
-    html.Div(children=[html.P('''\n\n\nPublished FA.gov data is current as of the website on 11 July 2023.''')], style={"margin-top": "25px"})
+    html.Div(children=[html.P('''\n\n\nPublished FA.gov data is current as of the website on 1 September 2023.''')], style={"margin-top": "25px"})
 ], style=CONTENT_STYLE)#style={"border":"10px white solid",'display': 'inline-block'})
 
 server = app.server
@@ -73,16 +74,19 @@ def render_tabs(tab):
                             html.Div(children=[
                                     html.H5('Links to Additional Resources:'),
     
-                                ], style={"margin-top":"35px",'text-align':'center'}),
+                                ], style={"margin-top":"35px",'text-align':'center', 'margin-botttom':'20px'}),
                             html.Div(
-                                    html.A("ForeignAssistance.gov", href="https://foreignassistance.gov/"),
+                                    html.A("Query Tool Detailed Instructions", href="https://usdos.sharepoint.com/:w:/r/sites/F/F%20Data%20Resources/Data%20Governance/FAgov%20Query%20Tool%20Instruction%20Guide_2023.docx?d=waa5f62d5a25f4e0dbc5d6e8653a2d5c5&csf=1&web=1&e=W1bcGT", target="_blank"),
+                                style={"margin-top":"15px",'margin-bottom': '10px',}),
+                            html.Div(
+                                    html.A("ForeignAssistance.gov", href="https://foreignassistance.gov/", target="_blank"),
+                                style={'margin-bottom': '10px',}),
+                            html.Div(
+                                html.A("USAID FA.gov API Site", href="https://data.usaid.gov/Administration-and-Oversight/ForeignAssistance-gov-Complete/azij-hu6e", target="_blank"),
+                            style={'margin-bottom': '10px',}),
+                            html.Div(
+                                html.A("F-Data Hub", href="https://usdos.sharepoint.com/sites/F/SitePages/F-Data.aspx?from=SendByEmail&xsdata=MDV8MDF8fDIxODgzYTU1YWY5MTRlMTgyODE1MDhkYjg4N2Q1Mzc3fDY2Y2Y1MDc0NWFmZTQ4ZDFhNjkxYTEyYjIxMjFmNDRifDB8MHw2MzgyNTM4NDQwNTU2NjQ2NjF8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazkwYUdWeUlpd2lWMVFpT2pFeGZRPT18MXxMMk5vWVhSekx6RTVPak5sWm1FeE1XTTRMVEZrTldRdE5HSTJOQzFoT0daakxUZ3hZV1l3TmpGa1lXRXpORjlsWWpGaU9HRTJOeTFoTnpCaUxUUXlNV1F0T0RFeVl5MW1NMkl6WW1JNE1EWTFNemRBZFc1eExtZGliQzV6Y0dGalpYTXZiV1Z6YzJGblpYTXZNVFk0T1RjNE56WXdORGM0Tmc9PXwwN2YyY2Y0NjQ5MzY0YzViMjgxNTA4ZGI4ODdkNTM3N3w0ODQ3ZmY4YTRmN2I0ZjZjODRhOGI2OTFlNjZhMzg1Nw%3d%3d&sdata=RFRSWVJTK2REeno4N0VGVE5RWTRVQmwrdUdYN2Q5SlBsZG9vRFE2ajhVMD0%3d&ovuser=66cf5074-5afe-48d1-a691-a12b2121f44b%2cMacdonaldCL%40state.gov&OR=Teams-HL&CT=1689795677959&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIxNDE1LzIzMDYwNDAxMTM4IiwiSGFzRmVkZXJhdGVkVXNlciI6ZmFsc2V9&SafelinksUrl=https%3a%2f%2fusdos.sharepoint.com%2fsites%2fF%2fSitePages%2fF-Data.aspx", target="_blank")
                                 ),
-                            html.Div(
-                                html.A("USAID FA.gov API Site", href="https://data.usaid.gov/Administration-and-Oversight/ForeignAssistance-gov-Complete/azij-hu6e")
-                            ),
-                            html.Div(
-                                html.A("F-Data Hub", href="https://usdos.sharepoint.com/sites/F/SitePages/F-Data.aspx?from=SendByEmail&xsdata=MDV8MDF8fDIxODgzYTU1YWY5MTRlMTgyODE1MDhkYjg4N2Q1Mzc3fDY2Y2Y1MDc0NWFmZTQ4ZDFhNjkxYTEyYjIxMjFmNDRifDB8MHw2MzgyNTM4NDQwNTU2NjQ2NjF8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazkwYUdWeUlpd2lWMVFpT2pFeGZRPT18MXxMMk5vWVhSekx6RTVPak5sWm1FeE1XTTRMVEZrTldRdE5HSTJOQzFoT0daakxUZ3hZV1l3TmpGa1lXRXpORjlsWWpGaU9HRTJOeTFoTnpCaUxUUXlNV1F0T0RFeVl5MW1NMkl6WW1JNE1EWTFNemRBZFc1eExtZGliQzV6Y0dGalpYTXZiV1Z6YzJGblpYTXZNVFk0T1RjNE56WXdORGM0Tmc9PXwwN2YyY2Y0NjQ5MzY0YzViMjgxNTA4ZGI4ODdkNTM3N3w0ODQ3ZmY4YTRmN2I0ZjZjODRhOGI2OTFlNjZhMzg1Nw%3d%3d&sdata=RFRSWVJTK2REeno4N0VGVE5RWTRVQmwrdUdYN2Q5SlBsZG9vRFE2ajhVMD0%3d&ovuser=66cf5074-5afe-48d1-a691-a12b2121f44b%2cMacdonaldCL%40state.gov&OR=Teams-HL&CT=1689795677959&clickparams=eyJBcHBOYW1lIjoiVGVhbXMtRGVza3RvcCIsIkFwcFZlcnNpb24iOiIxNDE1LzIzMDYwNDAxMTM4IiwiSGFzRmVkZXJhdGVkVXNlciI6ZmFsc2V9&SafelinksUrl=https%3a%2f%2fusdos.sharepoint.com%2fsites%2fF%2fSitePages%2fF-Data.aspx")
-                            ),
                 ])
             ],style=SIDEBAR_STYLE),
             html.Div(children=[
@@ -93,13 +97,16 @@ def render_tabs(tab):
                         html.P('''\n\nThe Query tab allows users to query published data in order to respond to internal or
                                   external data calls. Data is filterable by agency, bureau, year, sector, funding account, and location. Multiple values are selectable 
                                   for each field.'''),
-                        html.P('''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
-                                  visualization tools, visit https://foreignassistance.gov/''')
+                        html.P(children=[
+                               '''\n\nFor access to the full foreign assistance dataset, as well as documentation of what all columns mean and additional
+                                  visualization tools, visit ''',
+                                  html.A("https://foreignassistance.gov/", href="https://foreignassistance.gov/", target="_blank")])
                     ], style={'margin-top':'25px','font-size':'14px'}),
-                # dcc.Link(html.Button("QUERY BUILDER"), href="/query", refresh=True, style={'margin-top': '10px',
-                #                                                                            'margin-bottom': '10px',
-                #                                                                            'textAlign':'center',
-                #                                                                            'margin':'auto'})
+                html.Div(children=[
+                    dcc.Link(dbc.Button("  Build a Query  ", style={'margin-top': '75px','font-size':'37px','height':'75px','width':'400px'}), href="/query", refresh=True)
+                    ], style={'margin-bottom': '10px',
+                              'textAlign':'center',
+                              'margin':'auto'}),
                 # html.P('''\n[LARGE IMAGE WILL GO HERE]'''),
             ])
         ])
@@ -149,8 +156,11 @@ def render_tabs(tab):
             html.Div(children=[
                 html.H4('Query Tool Introduction:', style={"margin-top":"25px"}
                         ),
-                html.P('''The purpose of this tool is to provide individuals at the State Department the ability to query
-                          and ask questions of FA.gov financial foreign assistance data.'''),
+                html.P([
+                       '''The purpose of this tool is to provide individuals at the State Department the ability to query
+                          and ask questions of FA.gov financial foreign assistance data. ''',
+                       html.A("Detailed instructions are available here.", href="https://usdos.sharepoint.com/:w:/r/sites/F/F%20Data%20Resources/Data%20Governance/FAgov%20Query%20Tool%20Instruction%20Guide_2023.docx?d=waa5f62d5a25f4e0dbc5d6e8653a2d5c5&csf=1&web=1&e=W1bcGT", target="_blank")
+                       ]),
                 html.P('''\n\nThis tool allows users to query published data in order to respond to internal or
                           external data calls. Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
                           Multiple values are selectable for each field. Leaving a filter blank is allowed and will not result in data being excluded. Upon clicking the "Submit" button,
@@ -266,7 +276,7 @@ def render_content(tab, button, vals): #bur, yr, alls, yrtp
         if any(isinstance(i, list) for i in vals):
             df = qtk.subset_data(df,'FA.gov (FAID)',vals[1],vals[2],vals[3],vals[5],vals[6],vals[7],vals[8],reg=vals[4])
             return html.Div(className='row', children=[
-                html.H3('FA.gov Query Tool'),
+                html.H3('FAID & FADR Query Tool'),
                 dash_table.DataTable(id='query_results',
                                      data=df.to_dict('records'),
                                      columns=[{"name": i, "id": i} for i in df.columns],
@@ -274,7 +284,7 @@ def render_content(tab, button, vals): #bur, yr, alls, yrtp
                                     )
             ])
         return html.Div(className='row', children=[
-            html.H3('FA.gov Query Tool')
+            html.H3('Query Output Table')
         ]),
     
 if __name__ == '__main__':
