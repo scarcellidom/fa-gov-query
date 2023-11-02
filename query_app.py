@@ -55,7 +55,7 @@ app.layout = html.Div(className='row', children=[
             id="loading-1",
             type="default",
             children=html.Div(id='tabs-content-graphs', style={"margin-bottom": "35px",'display': 'inline-block'}), style={"margin-bottom": "35px",'display': 'inline-block', 'width':'99%'}),
-    html.Div(children=[html.P('''\n\n\nPublished FA.gov data is current as of the website on 1 September 2023.''')], style={"margin-top": "25px"})
+    html.Div(children=[html.P('''\n\n\nData last updated 30 October 2023.''')], style={"margin-top": "25px"})
 ], style=CONTENT_STYLE)#style={"border":"10px white solid",'display': 'inline-block'})
 
 server = app.server
