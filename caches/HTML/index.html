@@ -133,9 +133,28 @@
                 var fields = ["managing_agency_name","managing_sub_agency_or_bureau_1","fiscal_year",
                              "region_name","country_name","us_category_name","us_sector_name","funding_account_name"]
             
-                window.addEventListener("load", getFilters);
+                window.addEventListener("click", getFilters);
+                window.addEventListener("click", getDate);
+
+                
+                function getDate() {
+                    window.removeEventListener("click", getDate);
+                    async function get_date() {
+                        let url = "https://data.usaid.gov/api/views/metadata/v1/azij-hu6e"
+                        let obj = await (await fetch(url)).json();
+
+                        return Object.values(obj)[6].substring(0,10);
+                    }
+                    var tags;
+                    (async () => {
+                        dt = await get_date()
+                        
+                        document.getElementById("metadate").innerHTML = dt;
+                    })()
+                }
                 
                 function getFilters() {
+                    window.removeEventListener("click", getFilters);
                     for (let i = 0; i < fields.length; i++) {
                         
                         var x = document.getElementById(fields[i]);
@@ -179,15 +198,38 @@
             <button type="button" onclick=" getFilters()">RESET</button>
             
         </div>
-        
-        <div id="loading" style="display:none" class="loader">
-
+        <div id="loading" style="display:none">
+            <div  class="loader">
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p><i>
+                NOTE: Data for this application come from a live connection to the API for ForeignAssistance.gov.
+                <b>As a result, it may take a moment for the filters to populate or for the final data table to appear.</b>
+            </i></p>
         </div>
         
         <div id="main">
             <div id="header">
                 <h2 style="margin-top: 25px;">FA.gov Query Tool</h2>
             </div>
+            
+            <!--
+                <p style="color:red;"><i>
+                    IMPORTANT: As of 14 December 2023, the API for ForeignAssistance.gov is no longer being supported.
+                    <b>Data published after that date will not be included in tables generated using this tool.</b>
+                </i></p>
+                <br>
+            -->
+            
+            <p style="color:red;"><i>
+                IMPORTANT: The API for ForeignAssistance.gov was last updated <span id="metadate" style="color:red;font-weight:bold;text-decoration:underline">    </span>. 
+                For a complete account of what data is available on ForeignAssistance.gov for every agency, visit the "Status" tab on the "About" page of the website.
+            </i></p>
+            <br>
+            
             <h5>Introduction:</h5>
             <p>
                 The purpose of this tool is to provide individuals at the State Department the ability to query and ask questions of FA.gov financial foreign assistance data.
@@ -198,7 +240,7 @@
                This tool allows users to query published data in order to respond to internal or external data calls. 
                Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
                Click on the arrows to the right of the dropdown to expand it. You can scroll to view all options.
-               Multiple values are selectable for each field using the "ctrl" and "shift" keys. 
+               Multiple values are selectable for each field using the <b>"ctrl"</b> and <b>"shift"</b> keys. 
                Leaving a filter blank is allowed and will not result in data being excluded. 
                Upon clicking the "Submit" button, a table will populate below with your selections. 
                That table is also available to download as a CSV file for further analysis/visualization needs.
@@ -211,7 +253,7 @@
             </p>
             <p><i>
                 NOTE: Data for this application come from a live connection to the API for ForeignAssistance.gov.
-                As a result, it may take a moment for the filters to populate or for the final data table to appear.
+                <b>As a result, it may take a moment for the filters to populate or for the final data table to appear.</b>
             </i></p>
             <br>
             <h3 id="Table Title"></h3>
@@ -347,12 +389,13 @@
                                                               gfunding_account_name,
                                                               fiscal_year,
                                                               zfunding}) => {
-                            let key = amanaging_agency_name.concat(bmanaging_sub_agency_or_bureau_1,
-                                                                   cregion_name,
-                                                                   dcountry_name,
-                                                                   eus_category_name,
-                                                                   fus_sector_name,
-                                                                   gfunding_account_name);
+                            let key = "".concat(amanaging_agency_name,
+                                                bmanaging_sub_agency_or_bureau_1,
+                                                cregion_name,
+                                                dcountry_name,
+                                                eus_category_name,
+                                                fus_sector_name,
+                                                gfunding_account_name);
                             	if (r.has(key))
                              	r.set(key, {...r.get(key), [fiscal_year]: zfunding});
                             else
@@ -484,7 +527,7 @@
 
                     var csvrow = [];
                     for (var j = 0; j < cols.length; j++) {
-                        csvrow.push(cols[j].innerHTML);
+                        csvrow.push('\"'+cols[j].innerHTML+'\"');
                     }
 
                     csv_data.push(csvrow.join(","));
