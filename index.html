@@ -1,0 +1,562 @@
+<!DOCTYPE html> 
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style> 
+        html,body,h1,h2,h3,h4,h5 {
+            font-family: "Raleway", sans-serif
+        }
+        select {
+            width: 25rem;
+            z-index: 10000;
+            margin-bottom: 0.5rem;
+        }
+        select:focus {
+            width: max-content;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table {
+            border-collapse: collapse;
+            width: max-content;
+            
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            background-color: #0078D4;
+            color: white;
+        }
+        button {
+            background-color: #0078D4;
+            color: white;
+            margin-top: 1rem;
+        }
+        input[type="radio"]{
+            margin: 0 10px 0 10px;
+            margin-bottom: 1.5rem;
+        }
+        div[id="header"]{
+            background-color: #0078D4;
+            color: white;
+            padding: 0.05rem;
+        }
+        .loader {
+            margin: auto;
+            margin-top: 25%;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #0078D4;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row" style="margin-top: 2rem; margin-left: 31rem; margin-right: 1rem;">
+        <div style="position: fixed; top: 0px; left: 0px; bottom: 0px; width: 30rem; padding: 2rem 1rem; background-color: rgb(248, 249, 250); overflow: auto; z-index: 10000;"
+             id="sidebar">
+            <h4 id="demo">Filters:</h4>
+                        
+            <label class="radio-inline">Funding Type:
+                <input type="radio" id="spend2" name="spend" value=2 checked>Obligations  
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="spend3" name="spend" value=3>Disbursements
+            </label><br>
+            
+            <label for="managing_agency_name">Managing Agency: </label><br>
+            <select id="managing_agency_name" size="1" onfocus="this.size=10;" onblur="this.size=1;"  multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="managing_sub_agency_or_bureau_1">Bureau: </label><br>
+            <select id="managing_sub_agency_or_bureau_1" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="fiscal_year">Fiscal Year: </label><br>
+            <select id="fiscal_year" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="region_name">Region: </label><br>
+            <select id="region_name" size="1" onfocus="this.size=8;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="country_name">Benefitting Location: </label><br>
+            <select id="country_name" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="us_category_name">Sector Category: </label><br>
+            <select id="us_category_name" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="us_sector_name">Sector: </label><br>
+            <select id="us_sector_name" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+            
+            <label for="funding_account_name">Funding Account: </label><br>
+            <select id="funding_account_name" size="1" onfocus="this.size=10;" onblur="this.size=1;" multiple>
+                <option value="void" disabled>Click Arrows to Expand</option>
+            </select><br>
+        
+            <script>
+            
+                var fields = ["managing_agency_name","managing_sub_agency_or_bureau_1","fiscal_year",
+                             "region_name","country_name","us_category_name","us_sector_name","funding_account_name"]
+            
+                window.addEventListener("click", getFilters);
+                window.addEventListener("click", getDate);
+
+                
+                function getDate() {
+                    window.removeEventListener("click", getDate);
+                    async function get_date() {
+                        let url = "https://data.usaid.gov/api/views/metadata/v1/azij-hu6e"
+                        let obj = await (await fetch(url)).json();
+
+                        return Object.values(obj)[6].substring(0,10);
+                    }
+                    var tags;
+                    (async () => {
+                        dt = await get_date()
+                        
+                        document.getElementById("metadate").innerHTML = dt;
+                    })()
+                }
+                
+                function getFilters() {
+                    window.removeEventListener("click", getFilters);
+                    for (let i = 0; i < fields.length; i++) {
+                        
+                        var x = document.getElementById(fields[i]);
+                        while (x.options.length > 0) {
+                            x.remove(0);
+                        }
+                        
+                        var option = document.createElement("option");
+                        var value = "void";
+                        option.text = "Click Arrows to Expand";
+                        option.disabled = "True";
+                        document.getElementById(fields[i]).add(option);
+                        
+                        async function get_filters() {
+                            let url = "https://data.usaid.gov/resource/azij-hu6e.json?$$app_token=VGuyCNe7qeCaxd4pdoi6hHvKb&$select=distinct%20".concat(fields[i],"&$order=",fields[i])
+                            let obj = await (await fetch(url)).json();
+                            
+                            return obj;
+                        }
+                        var tags;
+                        (async () => {
+                            tags = await get_filters()
+                            
+                            var x = document.getElementById(fields[i]);
+                            
+                            for (var j = 0; j < tags.length; j++){
+                                var obj = tags[j];
+                                var option = document.createElement("option");
+                                var value = obj[fields[i]];
+                                option.text = value;
+                                option.selected
+                                x.add(option);
+                            }
+                        })()
+                    }
+                }
+                
+            </script>
+            
+            <button type="button" onclick=" getQuery()">SUBMIT</button>
+            <button type="button" onclick=" getFilters()">RESET</button>
+            
+        </div>
+        <div id="loading" style="display:none">
+            <div  class="loader">
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p><i>
+                NOTE: Data for this application come from a live connection to the API for ForeignAssistance.gov.
+                <b>As a result, it may take a moment for the filters to populate or for the final data table to appear.</b>
+            </i></p>
+        </div>
+        
+        <div id="main">
+            <div id="header">
+                <h2 style="margin-top: 25px;">FA.gov Query Tool</h2>
+            </div>
+            
+            <!--
+                <p style="color:red;"><i>
+                    IMPORTANT: As of 14 December 2023, the API for ForeignAssistance.gov is no longer being supported.
+                    <b>Data published after that date will not be included in tables generated using this tool.</b>
+                </i></p>
+                <br>
+            -->
+            
+            <p style="color:red;"><i>
+                IMPORTANT: The API for ForeignAssistance.gov was last updated <span id="metadate" style="color:red;font-weight:bold;text-decoration:underline">    </span>. 
+                For a complete account of what data is available on ForeignAssistance.gov for every agency, visit the "Status" tab on the "About" page of the website.
+            </i></p>
+            <br>
+            
+            <h5>Introduction:</h5>
+            <p>
+                The purpose of this tool is to provide individuals at the State Department the ability to query and ask questions of FA.gov financial foreign assistance data.
+                <a href="https://usdos.sharepoint.com.mcas.ms/sites/F/F%20Data%20Resources/Fo…23%5F%2Epdf&parent=%2Fsites%2FF%2FF%20Data%20Resources%2FData%20Governance"
+                target="_blank">Detailed instructions are available here.</a>
+            </p>
+            <p>
+               This tool allows users to query published data in order to respond to internal or external data calls. 
+               Data is filterable by managing agency, bureau, year, sector, location, and funding account. 
+               Click on the arrows to the right of the dropdown to expand it. You can scroll to view all options.
+               Multiple values are selectable for each field using the <b>"ctrl"</b> and <b>"shift"</b> keys. 
+               Leaving a filter blank is allowed and will not result in data being excluded. 
+               Upon clicking the "Submit" button, a table will populate below with your selections. 
+               That table is also available to download as a CSV file for further analysis/visualization needs.
+            </p>
+            <p>
+                After clicking the submit button, the filters will update based on your existing criteria. 
+                For example, selecting "Department of State" from the Managing Agency filter will update the Bureau filter to only show State bureaus. 
+                This allows for preliminary data exploration and helps the user more easily select relevant fields. 
+                Users who want all options included in the table should hold the "shift" key while clicking the first and last item in the dropdown.
+            </p>
+            <p><i>
+                NOTE: Data for this application come from a live connection to the API for ForeignAssistance.gov.
+                <b>As a result, it may take a moment for the filters to populate or for the final data table to appear.</b>
+            </i></p>
+            <br>
+            <h3 id="Table Title"></h3>
+        </div>
+            
+        <div id="container" style="display:none; overflow: auto;"></div><br>
+        
+        <script>
+            
+            var fields = ["managing_agency_name","managing_sub_agency_or_bureau_1","fiscal_year",
+                         "region_name","country_name","us_category_name","us_sector_name","funding_account_name"]
+                         
+            var corder = {"managing_agency_name":"amanaging_agency_name",
+                          "managing_sub_agency_or_bureau_1":"bmanaging_sub_agency_or_bureau_1",
+                          "region_name":"cregion_name",
+                          "country_name":"dcountry_name",
+                          "us_category_name":"eus_category_name",
+                          "us_sector_name":"fus_sector_name",
+                          "funding_account_name":"gfunding_account_name",
+                          "fiscal_year":"fiscal_year"}
+                         
+            var labels = {"amanaging_agency_name":"Managing Agency",
+                          "bmanaging_sub_agency_or_bureau_1":"Bureau",
+                          "cregion_name":"Region",
+                          "dcountry_name":"Benefitting Location",
+                          "eus_category_name":"Sector Category",
+                          "fus_sector_name": "Sector",
+                          "gfunding_account_name": "Funding Account",
+                          "fiscal_year":"Fiscal Year",
+                          "zfunding": "Funding Amount"}            
+            
+            function getQuery() {
+            
+                document.getElementById("main").style.display = "none";
+                document.getElementById("loading").style.display = "block";
+                document.getElementById("container").style.display = "none";
+                document.getElementById("data").style.display = "none";
+                document.getElementById("links").style.display = "none";
+
+                
+                document.getElementById("Table Title").innerHTML = "Query Output Table";
+                
+                var base = "https://data.usaid.gov/resource/azij-hu6e.json?$$app_token=VGuyCNe7qeCaxd4pdoi6hHvKb&";
+                var slct = "$select=";
+                var grps = "&$group=";
+                var whrs = "&$where=transaction_type_id IN(".concat(document.querySelector('input[name="spend"]:checked').value,")");
+                
+                var inputs = document.getElementsByTagName("select");
+        
+                for(var i = 0; i < inputs.length; i++) {
+                    var result = [];
+                    var options = inputs[i] && inputs[i].options;
+                    var opt;
+                    for (var j=0, jLen=options.length; j<jLen; j++) {
+                        opt = options[j];
+    
+                        if (opt.selected) {
+                            result.push(opt.value || opt.text);
+                        }
+                    }
+                    
+                    if (result.length > 0) {
+                        var slct = slct.concat(inputs[i].id," AS ",corder[inputs[i].id],",");
+                        if (grps.slice(-1) != "=") {
+                            var grps = grps.concat(",",inputs[i].id);
+                        } else {
+                            var grps = grps.concat(inputs[i].id);
+                        }
+                        var whrs = whrs.concat(" AND ",inputs[i].id," IN(");
+                        for (var x in result) {
+                            if (x>0) {
+                                var whrs = whrs.concat(',"',result[x],'"');
+                            } else {
+                                var whrs = whrs.concat('"',result[x],'"');
+                            }
+                        }
+                        var whrs = whrs.concat(")");
+                    }
+                }
+                
+                for (let i = 0; i < fields.length; i++) {
+                    async function renew_filters() {
+                        let url = "https://data.usaid.gov/resource/azij-hu6e.json?$$app_token=VGuyCNe7qeCaxd4pdoi6hHvKb&$select=distinct%20".concat(fields[i],"&$order=",fields[i],whrs)
+                        let obj = await (await fetch(url)).json();
+                        
+                        //console.log(obj);
+                        return obj;
+                    }
+                    var tags;
+                    (async () => {
+                        tags = await renew_filters()
+                        
+                        var x = document.getElementById(fields[i]);
+                        while (x.options.length > 0) {
+                            x.remove(0);
+                        }
+                        
+                        var option = document.createElement("option");
+                        var value = "Click Arrows to Expand";
+                        option.text = value;
+                        option.disabled = true;
+                        x.add(option);
+                        
+                        for (var j = 0; j < tags.length; j++){
+                            var obj = tags[j];
+                            var option = document.createElement("option");
+                            var value = obj[fields[i]];
+                            option.text = value;
+                            if (whrs.includes(fields[i])) {
+                                option.selected = "selected";
+                            }
+                            x.add(option);
+                        }
+                    })()
+                }
+                
+                document.getElementById("tags").href = base.concat(slct,"SUM(current_dollar_amount) AS zfunding",grps,whrs);
+                async function get_table() {
+                    let url = document.getElementById("tags").href
+                    let obj = await (await fetch(url)).json();
+                    
+                    if (whrs.includes("fiscal_year")) {
+                        for (let m = 0; m < obj.length; m++) {
+                            obj[m]["fiscal_year"] = "z".concat(obj[m]["fiscal_year"])
+                        }
+                        const convert = toConvert => {
+                            const map = toConvert.reduce((r, {amanaging_agency_name,
+                                                              bmanaging_sub_agency_or_bureau_1,
+                                                              cregion_name,
+                                                              dcountry_name,
+                                                              eus_category_name,
+                                                              fus_sector_name,
+                                                              gfunding_account_name,
+                                                              fiscal_year,
+                                                              zfunding}) => {
+                            let key = "".concat(amanaging_agency_name,
+                                                bmanaging_sub_agency_or_bureau_1,
+                                                cregion_name,
+                                                dcountry_name,
+                                                eus_category_name,
+                                                fus_sector_name,
+                                                gfunding_account_name);
+                            	if (r.has(key))
+                             	r.set(key, {...r.get(key), [fiscal_year]: zfunding});
+                            else
+                              	r.set(key, {amanaging_agency_name,
+                                          	bmanaging_sub_agency_or_bureau_1,
+                                          	cregion_name,
+                                          	dcountry_name,
+                                          	eus_category_name,
+                                          	fus_sector_name,
+                                          	gfunding_account_name,
+                                          	[fiscal_year]: zfunding});
+                                return r;
+                            }, new Map());
+                            return [...map.values()];
+                        };
+                        var obj2 = convert(obj);
+                        const all_cols = new Set();
+                        for (let k = 0; k < obj2.length; k++) {
+                            for (let key in obj2[k]) {
+                                if (obj2[k][key] === undefined) {
+                                    delete obj2[k][key];
+                                }
+                                else {
+                                    all_cols.add(key);
+                                }
+                            }
+                        }
+                        console.log(obj2);
+                        for (let l = 0; l < obj2.length; l++) {
+                            for (const key of all_cols) {
+                                if (key in obj2[l]) {}
+                                else {
+                                    obj2[l][key] = 0;
+                                }
+                            }
+                        }
+                        return obj2;
+                    }
+                    else {
+                        return obj;
+                    }
+                }
+                
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0,
+                });
+                
+                var jsonData;
+                (async () => {
+                    jsonData = await get_table()
+                    let container = document.getElementById("container");
+                    container.replaceChildren();
+                    
+                    let table = document.createElement("table");
+                    let cols = Object.keys(jsonData[0]).sort();
+                    
+                    let thead = document.createElement("thead");
+                    let tr = document.createElement("tr");
+                    
+                    cols.forEach((item) => {
+                       let th = document.createElement("th");
+                       if (!(Object.keys(labels).includes(item))) {
+                           th.innerText = item.replace("z","");
+                       }
+                       else {
+                           th.innerText = labels[item]; // Set the column name as the text of the header cell
+                       }
+                       tr.appendChild(th); // Append the header cell to the header row
+                    });
+                    thead.appendChild(tr); // Append the header row to the header
+                    table.append(tr) // Append the header to the table
+                    
+                    jsonData.forEach((item) => {
+                       let tr = document.createElement("tr");
+                       
+                       let vals = Object.keys(item).sort();
+                       
+                       vals.forEach((elem) => {
+                          let td = document.createElement("td");
+                          if (Object.keys(labels).includes(elem) && elem!="zfunding") {
+                              td.innerText = item[elem]; // Set the value as the text of the table cell
+                          }
+                          else {
+                              td.innerText = formatter.format(item[elem]);
+                          }
+                          tr.appendChild(td); // Append the table cell to the table row
+                       });
+                       table.appendChild(tr); // Append the table row to the table
+                    });
+                    container.appendChild(table) // Append the table to the container element
+                
+                
+                document.getElementById("main").style.display = "block";
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("data").style.display = "block";
+                document.getElementById("container").style.display = "block";
+                document.getElementById("links").style.display = "block";
+                })()
+                
+            }
+        </script>
+        
+        <div id="data" style="display:none">
+            <button type="button" onclick="tableToCSV()">
+                Download CSV
+            </button><br><br>
+            <a id="tags" target="_blank">VIEW RAW DATA</a><br><br><br><br>
+        </div>
+        
+        <div id="links" style="display:block">
+            <h5>Links to Additional Resources:</h5>
+            <a href="https://foreignassistance.gov/" target="_blank">ForeignAssistance.gov</a><br>
+            <a href="https://data.usaid.gov/Administration-and-Oversight/ForeignAssistance-gov-Complete/azij-hu6e" target="_blank">USAID FA.gov API Site</a><br>
+            <a href="https://usdos.sharepoint.com/sites/F/SitePages/F-Data.aspx?from=Send…l=https%3a%2f%2fusdos.sharepoint.com%2fsites%2fF%2fSitePages%2fF-Data.aspx" 
+               target="_blank">F-Data Hub</a><br>
+        </div>
+           
+           
+        <script type="text/javascript">
+            function tableToCSV() {
+     
+                var csv_data = [];
+     
+                var rows = document.getElementsByTagName('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var cols = rows[i].querySelectorAll('td,th');
+
+                    var csvrow = [];
+                    for (var j = 0; j < cols.length; j++) {
+                        csvrow.push('\"'+cols[j].innerHTML+'\"');
+                    }
+
+                    csv_data.push(csvrow.join(","));
+                }
+     
+                csv_data = csv_data.join('\n');
+                downloadCSVFile(csv_data);
+            }
+     
+            function downloadCSVFile(csv_data) {
+                CSVFile = new Blob([csv_data], {
+                    type: "text/csv"
+                });
+
+                var temp_link = document.createElement('a');
+                temp_link.download = "query.csv";
+                var url = window.URL.createObjectURL(CSVFile);
+                temp_link.href = url;
+
+                temp_link.style.display = "none";
+                document.body.appendChild(temp_link);
+
+                temp_link.click();
+                document.body.removeChild(temp_link);
+            }
+        </script>
+
+    </div>
+
+</body>
+
+</html>
